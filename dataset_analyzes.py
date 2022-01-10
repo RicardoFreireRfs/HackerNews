@@ -1,18 +1,21 @@
 from csv import reader
+import datetime as dt
 
+# Open hacker_news.csv file
 read_file = reader(open("hacker_news.csv"))
+# hn is a list with the csv data
 hn = list(read_file)
-print(hn[:5])
-
+# The file's headers is saved at headers
 headers = hn[0]
-print(headers)
+# updating the hn list deleting the header
 del hn[0]
-print(hn[:5])
 
+# creating lits with the asked, shown and other posts
 ask_posts = []
 show_posts =[]
 other_posts = []
 
+# updating the posts lists
 for row in hn:
     title = row[1]
     if title != None and "ask hn" in title.lower():
@@ -21,9 +24,9 @@ for row in hn:
         show_posts.append(row)
     else:
         other_posts.append(row)
-        
-print(ask_posts)
+#print(ask_posts)
 
+# calculating the average of comments
 total_ask_comments = 0
 total_show_comments = 0
 for row in ask_posts:
@@ -35,59 +38,19 @@ for row in show_posts:
     num_comments = row[4]
     total_show_comments = int(num_comments) + total_show_comments
 avg_show_comments = total_show_comments/len(show_posts)
-print(avg_ask_comments, avg_show_comments)
+#print(avg_ask_comments, avg_show_comments)
 
-import datetime as dt
-
+# starting the analyzes of comments over time
 result_list = []
 for row in ask_posts:
     created_at = row[6]
     n_comments = int(row[4])
     app_v = (created_at, n_comments)
     result_list.append(app_v)
-    
+
 #print(result_list)
-counts_by_hour = {}
-comments_by_hour = {}
 
-for row in result_list:
-    date_c = row[0]
-    date_obj =  dt.datetime.strptime(date_c, "%m/%d/%Y %H:%M")
-    date_hour = date_obj.hour
-    #print(type(date_hour))
-    if date_hour not in counts_by_hour:
-        counts_by_hour[date_hour] = 1
-        comments_by_hour[date_hour] = row[1]
-    else:
-        counts_by_hour[date_hour] += 1
-        comments_by_hour[date_hour] = comments_by_hour[date_hour] + row[1]
-        
-print(counts_by_hour)
-print(comments_by_hour)
-
-total_ask_comments = 0
-total_show_comments = 0
-for row in ask_posts:
-    num_comments = row[4]
-    total_ask_comments = int(num_comments) + total_ask_comments
-avg_ask_comments = total_ask_comments/len(ask_posts)
-
-for row in show_posts:
-    num_comments = row[4]
-    total_show_comments = int(num_comments) + total_show_comments
-avg_show_comments = total_show_comments/len(show_posts)
-print(avg_ask_comments, avg_show_comments)
-
-import datetime as dt
-
-result_list = []
-for row in ask_posts:
-    created_at = row[6]
-    n_comments = int(row[4])
-    app_v = (created_at, n_comments)
-    result_list.append(app_v)
-    
-#print(result_list)
+# creating dictionaries to analyze comments frequency
 counts_by_hour = {}
 comments_by_hour = {}
 
